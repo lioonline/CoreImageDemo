@@ -13,6 +13,7 @@
 @property (nonatomic,strong) UIImageView *secondImageView;
 @property (nonatomic,strong) UIImageView *thirdImageView;
 @property (nonatomic,assign) CGAffineTransform transform;
+@property (nonatomic,assign) CGFloat rotation;
 
 
 @end
@@ -93,6 +94,8 @@
     CGPoint translation = [recognizer translationInView:recognizer.view];
    [recognizer.view setTransform:CGAffineTransformTranslate(recognizer.view.transform, translation.x, translation.y)];
     [recognizer setTranslation:CGPointZero inView:recognizer.view];
+//    NSLog(@"Pan Frame : %@",NSStringFromCGRect(_secondImageView.frame));
+
 }
 
 
@@ -101,6 +104,9 @@
     CGFloat scale = [recognizer scale];
     [recognizer.view setTransform:CGAffineTransformScale(recognizer.view.transform, scale, scale)];
     [recognizer setScale:1.0];
+//    NSLog(@"Pinch Frame : %@",NSStringFromCGRect(_secondImageView.frame));
+    NSLog(@"scale :%f",scale);
+
    
 }
 
@@ -109,6 +115,9 @@
     CGFloat rotation = [recognizer rotation];
     [recognizer.view setTransform:CGAffineTransformRotate(recognizer.view.transform, rotation)];
     [recognizer setRotation:0];
+    NSLog(@"rotation :%f",rotation);
+    NSLog(@"rotate Frame : %@",NSStringFromCGRect(_secondImageView.frame));
+    _rotation = rotation;
 }
 
 - (UIImage *)addImage:(UIImage *)image1 toImage:(UIImage *)image2 {
@@ -123,9 +132,8 @@
 
     [image1 drawInRect:CGRectMake(0, 0, _imageView.bounds.size.width, _imageView.bounds.size.height)];
     
-    [image2 drawInRect:CGRectMake(_secondImageView.frame.origin.x, _secondImageView.frame.origin.y, image2.size.width,image2.size.height)];
-
-
+    [image2 drawInRect:CGRectMake(_secondImageView.frame.origin.x, _secondImageView.frame.origin.y, CGRectGetWidth(_secondImageView.frame),CGRectGetHeight(_secondImageView.frame))];
+    
     UIImage *resultingImage = UIGraphicsGetImageFromCurrentImageContext();
     
     UIGraphicsEndImageContext();
